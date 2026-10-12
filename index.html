@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محمود سعداوي | Mahmoud Saadawie - Software Developer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js CDN for 3D Background Particles -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo & Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tech: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        obsidian: '#020617',
+                        neonCyan: '#00f2fe',
+                        neonBlue: '#4facfe',
+                        neonPurple: '#a855f7',
+                        neonEmerald: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, rgba(2, 6, 23, 0.92) 0%, rgba(3, 7, 18, 0.97) 100%), url('٦.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .glass-panel {
+            background: rgba(10, 16, 31, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.9);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 242, 254, 0.6);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 40px -10px rgba(0, 242, 254, 0.3);
+        }
+        .glow-text {
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.6);
+        }
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(1deg); }
+        }
+        .floating-profile {
+            animation: floatAnimation 6s ease-in-out infinite;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; border: 1px solid rgba(0, 242, 254, 0.2); }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+    </style>
+</head>
+<body class="bg-obsidian text-gray-100 min-h-screen relative selection:bg-cyan-500 selection:text-black">
+
+    <!-- 3D Cinematic Particle Canvas Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 space-x-reverse group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:rotate-6 transition-transform">
+                    <i class="fa-solid fa-code text-white text-xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">محمود سعداوي</span>
+                    <span class="text-[10px] font-tech text-gray-400 tracking-wider">SOFTWARE DEVELOPER</span>
+                </div>
+            </a>
+            
+            <nav class="hidden md:flex items-center space-x-8 space-x-reverse font-semibold text-sm">
+                <a href="#home" class="hover:text-cyan-400 transition-colors">الرئيسية</a>
+                <a href="#about" class="hover:text-cyan-400 transition-colors">نبذة عني</a>
+                <a href="#skills" class="hover:text-cyan-400 transition-colors">المهارات والتقنيات</a>
+                <a href="#projects" class="hover:text-cyan-400 transition-colors">المشاريع</a>
+                <a href="#timeline" class="hover:text-cyan-400 transition-colors">رحلة التعلم</a>
+                <a href="#contact" class="hover:text-cyan-400 transition-colors">تواصل معي</a>
+            </nav>
+
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <a href="https://wa.me/201274367632" target="_blank" class="hidden sm:inline-flex items-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all transform hover:-translate-y-0.5">
+                    <i class="fa-brands fa-whatsapp text-lg ml-2"></i>
+                    <span>واتساب</span>
+                </a>
+                <button id="menu-btn" class="md:hidden text-gray-300 hover:text-cyan-400 focus:outline-none text-2xl p-2">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel px-6 py-4 border-t border-cyan-500/20 space-y-3">
+            <a href="#home" class="block py-2 hover:text-cyan-400 transition-colors">الرئيسية</a>
+            <a href="#about" class="block py-2 hover:text-cyan-400 transition-colors">نبذة عني</a>
+            <a href="#skills" class="block py-2 hover:text-cyan-400 transition-colors">المهارات والتقنيات</a>
+            <a href="#projects" class="block py-2 hover:text-cyan-400 transition-colors">المشاريع</a>
+            <a href="#timeline" class="block py-2 hover:text-cyan-400 transition-colors">رحلة التعلم</a>
+            <a href="#contact" class="block py-2 hover:text-cyan-400 transition-colors">تواصل معي</a>
+            <a href="https://wa.me/201274367632" target="_blank" class="block py-2 text-emerald-400 font-bold">
+                <i class="fa-brands fa-whatsapp ml-2"></i>تواصل عبر واتساب
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-28">
+
+        <!-- Hero Section -->
+        <section id="home" class="min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-right">
+                    <div class="inline-flex items-center space-x-2 space-x-reverse px-4 py-2 rounded-full glass-card border border-cyan-500/30 text-cyan-400 text-xs sm:text-sm font-bold">
+                        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span>متاح للمشاريع والتعاون التقني</span>
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
+                        أهلاً بك، أنا <br>
+                        <span class="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent glow-text">محمود سعداوي</span>
+                    </h1>
+                    
+                    <p class="text-gray-300 font-light text-base sm:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        طالب بكلية تكنولوجيا المعلومات بجامعة برج العرب التكنولوجية. مطوّر برمجيات متخصص في <span class="text-cyan-400 font-bold">Full-Stack Web Development</span>، إنترنت الأشياء <span class="text-purple-400 font-bold">(IoT)</span>، وتكامل تقنيات الذكاء الاصطناعي وتحليل البيانات. أعمل على تحويل الأفكار إلى حلول ذكية وعملية.
+                    </p>
+
+                    <!-- Fast Contact Action Bar -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="https://wa.me/201274367632" target="_blank" class="px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all transform hover:-translate-y-1 flex items-center">
+                            <i class="fa-brands fa-whatsapp text-xl ml-2"></i>
+                            <span>راسلني على الواتساب</span>
+                        </a>
+                        <a href="#projects" class="px-8 py-4 rounded-xl glass-card border border-cyan-500/40 text-cyan-300 font-bold hover:bg-cyan-500/10 transition-all">
+                            استكشف المشاريع <i class="fa-solid fa-arrow-left mr-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Professional Holographic Profile Display (No Boring Box/Frame) -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative floating-profile">
+                        <!-- Outer Glow Rings -->
+                        <div class="absolute -inset-4 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 opacity-40 blur-2xl"></div>
+                        <div class="relative w-72 h-72 sm:w-80 sm:h-80 rounded-full p-2 bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 shadow-2xl shadow-cyan-500/30 flex items-center justify-center">
+                            <div class="w-full h-full rounded-full overflow-hidden bg-obsidian relative flex items-center justify-center border-4 border-slate-900">
+                                <!-- 
+                                    صورة البروفايل الشخصية:
+                                    ضع صورتك بنفس المجلد باسم profile.jpg
+                                -->
+                                <img src="profile.jpg" alt="محمود سعداوي" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.style.display='none'; document.getElementById('profile-ph').style.display='flex';">
+                                <div id="profile-ph" class="absolute inset-0 hidden flex-col items-center justify-center p-6 text-center bg-slate-950/95">
+                                    <i class="fa-solid fa-user-astronaut text-6xl text-cyan-400 mb-3 animate-bounce"></i>
+                                    <span class="text-sm font-bold text-gray-200">صورة البروفايل</span>
+                                    <span class="text-xs text-cyan-400/80 mt-1">ضع ملف باسم profile.jpg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- About Me Section -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-black mb-4">نبذة عني</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-600 mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4">شغف مستمر بالتقنية، دمج بين العتاد البرمجي والحلول الذكية، وسعي دائم للتميز.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card p-8 rounded-3xl border border-cyan-500/20 space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl mb-6">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-cyan-300">التعليم الأكاديمي</h3>
+                    <p class="text-gray-300 leading-loose text-sm">
+                        طالب بكلية تكنولوجيا المعلومات في <strong class="text-cyan-400">جامعة برج العرب التكنولوجية</strong> (الإسكندرية، مصر)، أدرس علوم البرمجة، الشبكات، وقواعد البيانات.
+                    </p>
+                </div>
+
+                <div class="glass-card p-8 rounded-3xl border border-blue-500/20 space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl mb-6">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-blue-300">التخصصات التقنية</h3>
+                    <p class="text-gray-300 leading-loose text-sm">
+                        تطوير تطبيقات الويب المتكاملة <strong class="text-blue-400">(Full-Stack)</strong>، برمجة المتحكمات وإنترنت الأشياء <strong class="text-purple-400">(IoT)</strong>، ودمج الذكاء الاصطناعي وتحليل البيانات.
+                    </p>
+                </div>
+
+                <div class="glass-card p-8 rounded-3xl border border-purple-500/20 space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl mb-6">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-purple-300">الطموح والرؤية</h3>
+                    <p class="text-gray-300 leading-loose text-sm">
+                        تحويل الأفكار الإبداعية إلى مشاريع حقيقية تعمل بكفاءة عالية، والعمل ضمن فرق تقنية احترافية لتقديم حلول برمجية مستدامة وقابلة للتوسع.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Skills Hub -->
+        <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-black mb-4">المهارات والتقنيات التفاعلية</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-600 mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4">اضغط على أي لغة أو تقنية لعرض التفاصيل وتوثيقها الرسمي.</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- Skill 1 -->
+                <div onclick="openSkillModal('Python', 'لغة برمجة متعددة الاستخدامات، تستخدم بشكل أساسي في الذكاء الاصطناعي، تحليل البيانات، وبناء الخوارزميات.', 'مستوى متقدم', 'https://www.python.org')" class="glass-card p-6 rounded-2xl text-center cursor-pointer group">
+                    <i class="fa-brands fa-python text-4xl text-cyan-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-gray-200">Python</h4>
+                    <span class="text-xs text-cyan-400 mt-1 block">اضغط للتفاصيل</span>
+                </div>
+                <!-- Skill 2 -->
+                <div onclick="openSkillModal('JavaScript', 'لغة الويب التفاعلية لبناء واجهات المستخدم الديناميكية والأنظمة الخلفية عبر Node.js.', 'مستوى متقدم', 'https://developer.mozilla.org/en-US/docs/Web/JavaScript')" class="glass-card p-6 rounded-2xl text-center cursor-pointer group">
+                    <i class="fa-brands fa-js text-4xl text-yellow-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-gray-200">JavaScript</h4>
+                    <span class="text-xs text-cyan-400 mt-1 block">اضغط للتفاصيل</span>
+                </div>
+                <!-- Skill 3 -->
+                <div onclick="openSkillModal('HTML & CSS', 'أساسيات بناء وتصميم الواجهات الخارجية للويب بطريقة عصرية متجاوبة.', 'مستوى محترف', 'https://developer.mozilla.org')" class="glass-card p-6 rounded-2xl text-center cursor-pointer group">
+                    <i class="fa-brands fa-html5 text-4xl text-orange-500 mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-gray-200">HTML / CSS</h4>
+                    <span class="text-xs text-cyan-400 mt-1 block">اضغط للتفاصيل</span>
+                </div>
+                <!-- Skill 4 -->
+                <div onclick="openSkillModal('React', 'مكتبة جافاسكريبت لبناء واجهات مواقع وتطبيقات تفاعلية وسريعة.', 'مستوى جيد', 'https://react.dev')" class="glass-card p-6 rounded-2xl text-center cursor-pointer group">
+                    <i class="fa-brands fa-react text-4xl text-cyan-300 mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-gray-200">React</h4>
+                    <span class="text-xs text-cyan-400 mt-1 block">اضغط للتفاصيل</span>
+                </div>
+                <!-- Skill 5 -->
+                <div onclick="openSkillModal('Node.js & Backend', 'بيئة تشغيل لبناء الخوادم والمعالجات الخلفية والربط مع قواعد البيانات.', 'مستوى جيد', 'https://nodejs.org')" class="glass-card p-6 rounded-2xl text-center cursor-pointer group">
+                    <i class="fa-brands fa-node-js text-4xl text-green-500 mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-gray-200">Node.js</h4>
+                    <span class="text-xs text-cyan-400 mt-1 block">اضغط للتفاصيل</span>
+                </div>
+                <!-- Skill 6 -->
+                <div onclick="openSkillModal('IoT & ESP32', 'برمجة المتحكمات المدمجة واستقبال قراءات المستشعرات وتوصيلها بالإنترنت.', 'مستوى متقدم', 'https://www.espressif.com')" class="glass-card p-6 rounded-2xl text-center cursor-pointer group">
+                    <i class="fa-solid fa-microchip text-4xl text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                    <h4 class="font-bold text-gray-200">IoT / ESP32</h4>
+                    <span class="text-xs text-cyan-400 mt-1 block">اضغط للتفاصيل</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-black mb-4">المشاريع التقنية</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-600 mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4">عرض تفصيلي لأبرز مشاريعي مع توضيح الفكرة، الدور الفعلي، والتقنيات المستخدمة.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Project 1: Smart Farm -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-cyan-500/20 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
+                            <!-- صورة المشروع: smart-farm.jpg -->
+                            <img src="smart-farm.jpg" alt="Smart Farm" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.style.display='none'; document.getElementById('farm-ph').style.display='flex';">
+                            <div id="farm-ph" class="absolute inset-0 hidden flex-col items-center justify-center p-4 text-center bg-slate-950/90">
+                                <i class="fa-solid fa-seedling text-5xl text-emerald-400 mb-2"></i>
+                                <span class="text-xs text-gray-400">ضع صورة المشروع باسم smart-farm.jpg</span>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-cyan-400 border border-cyan-500/30">
+                                IoT & Web Dashboard
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <h3 class="text-2xl font-bold">النظام الزراعي الذكي (Smart Farm)</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                مراقبة رطوبة التربة ودرجة الحرارة والرطوبة الجوية، استقبال بيانات المستشعرات عبر ESP32 والاتصال اللاسلكي، وعرض القراءات في لوحة تحكم ويب تفاعلية.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-lg border border-cyan-500/20">IoT</span>
+                                <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-lg border border-cyan-500/20">ESP32</span>
+                                <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-lg border border-cyan-500/20">JavaScript</span>
+                                <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-lg border border-cyan-500/20">Sensors</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openProjectModal('smartFarm')" class="w-full py-3 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold hover:bg-cyan-500 hover:text-white transition-all">
+                            استعراض تفاصيل المشروع <i class="fa-solid fa-arrow-left mr-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 2: Drone Technology -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-blue-500/20 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
+                            <!-- صورة المشروع: drone.jpg -->
+                            <img src="drone.jpg" alt="Drone Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.style.display='none'; document.getElementById('drone-ph').style.display='flex';">
+                            <div id="drone-ph" class="absolute inset-0 hidden flex-col items-center justify-center p-4 text-center bg-slate-950/90">
+                                <i class="fa-solid fa-helicopter text-5xl text-blue-400 mb-2"></i>
+                                <span class="text-xs text-gray-400">ضع صورة المشروع باسم drone.jpg</span>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-blue-400 border border-blue-500/30">
+                                Electronics & Control
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <h3 class="text-2xl font-bold">مشروع الدرون (Drone Technology)</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                مشروع تقني في مجال الطائرات المسيّرة، يتناول دراسة أنظمة التحكم الإلكتروني، وتكامل المكونات التقنية والإشارات.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">Drone Tech</span>
+                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">Electronics</span>
+                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">Control Systems</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openProjectModal('drone')" class="w-full py-3 rounded-xl bg-blue-500/20 border border-blue-500/40 text-blue-300 font-bold hover:bg-blue-500 hover:text-white transition-all">
+                            استعراض تفاصيل المشروع <i class="fa-solid fa-arrow-left mr-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 3: BATU DIGITAL -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-purple-500/20 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
+                            <!-- صورة المشروع: batu.jpg -->
+                            <img src="batu.jpg" alt="BATU DIGITAL" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.style.display='none'; document.getElementById('batu-ph').style.display='flex';">
+                            <div id="batu-ph" class="absolute inset-0 hidden flex-col items-center justify-center p-4 text-center bg-slate-950/90">
+                                <i class="fa-solid fa-brain text-5xl text-purple-400 mb-2"></i>
+                                <span class="text-xs text-gray-400">ضع صورة المشروع باسم batu.jpg</span>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-purple-400 border border-purple-500/30">
+                                AI Campus Platform
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <h3 class="text-2xl font-bold">BATU DIGITAL — المساعد الجامعي الذكي</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                منصة رقمية قيد التطوير لتسهيل الوصول إلى الخدمات الجامعية والإرشادات في جامعة برج العرب التكنولوجية عبر محادثة ذكية.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-3 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-lg border border-purple-500/20">Full-Stack</span>
+                                <span class="px-3 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-lg border border-purple-500/20">Databases</span>
+                                <span class="px-3 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-lg border border-purple-500/20">AI Integration</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openProjectModal('batu')" class="w-full py-3 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold hover:bg-purple-500 hover:text-white transition-all">
+                            استعراض تفاصيل المشروع <i class="fa-solid fa-arrow-left mr-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 4: EEG Prototype Notice -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-amber-500/20 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 relative overflow-hidden bg-slate-900 flex items-center justify-center">
+                            <!-- صورة المشروع: eeg.jpg -->
+                            <img src="eeg.jpg" alt="EEG Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.style.display='none'; document.getElementById('eeg-ph').style.display='flex';">
+                            <div id="eeg-ph" class="absolute inset-0 hidden flex-col items-center justify-center p-4 text-center bg-slate-950/90">
+                                <i class="fa-solid fa-wave-square text-5xl text-amber-400 mb-2"></i>
+                                <span class="text-xs text-gray-400">ضع صورة المشروع باسم eeg.jpg</span>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-amber-400 border border-amber-500/30">
+                                Exploratory Research
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <h3 class="text-2xl font-bold">دراسات واستكشاف إشارات الدماغ (EEG)</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                نموذج أولي وفكرة بحثية لاستكشاف التعامل مع إشارات الدماغ EEG، مع توضيح كامل لمتطلبات التدريب والتحقق العلمي المستقبلي.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-lg border border-amber-500/20">Research</span>
+                                <span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-lg border border-amber-500/20">EEG Signals</span>
+                                <span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-lg border border-amber-500/20">Prototype</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <button onclick="openProjectModal('eeg')" class="w-full py-3 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold hover:bg-amber-500 hover:text-white transition-all">
+                            استعراض تفاصيل المشروع <i class="fa-solid fa-arrow-left mr-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-black mb-4">رحلة التعلم والأنشطة التقنية</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-600 mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4">خط زمني لأبرز المحطات والفعاليات التقنية مثل مشاركات Techno.</p>
+            </div>
+
+            <div class="relative border-r-2 border-cyan-500/30 space-y-12 mr-4 pr-6">
+                
+                <div class="relative">
+                    <div class="absolute -right-[31px] top-1.5 w-4 h-4 rounded-full bg-cyan-400 border-4 border-obsidian shadow-lg shadow-cyan-500"></div>
+                    <div class="glass-card p-6 rounded-2xl border border-cyan-500/20">
+                        <span class="text-cyan-400 text-sm font-bold">المرحلة الحالية</span>
+                        <h3 class="text-xl font-bold mt-1">تطوير منصة BATU DIGITAL</h3>
+                        <p class="text-gray-300 mt-2 text-sm">البدء في بناء المساعد الجامعي الذكي وتجهيز واجهات التوجيه والتحكم لطلاب الجامعة.</p>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute -right-[31px] top-1.5 w-4 h-4 rounded-full bg-blue-500 border-4 border-obsidian shadow-lg shadow-blue-500"></div>
+                    <div class="glass-card p-6 rounded-2xl border border-blue-500/20">
+                        <span class="text-blue-400 text-sm font-bold">المشاركات التقنية</span>
+                        <h3 class="text-xl font-bold mt-1">فعاليات Techno والأنشطة الطلابية</h3>
+                        <p class="text-gray-300 mt-2 text-sm">المشاركة النشطة في الفعاليات والأنشطة المرتبطة بـ Techno للتعرف على أحدث الاتجاهات البرمجية.</p>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute -right-[31px] top-1.5 w-4 h-4 rounded-full bg-purple-500 border-4 border-obsidian shadow-lg shadow-purple-500"></div>
+                    <div class="glass-card p-6 rounded-2xl border border-purple-500/20">
+                        <span class="text-purple-400 text-sm font-bold">التطبيق العملي</span>
+                        <h3 class="text-xl font-bold mt-1">مشروع Smart Farm والأنظمة المدمجة</h3>
+                        <p class="text-gray-300 mt-2 text-sm">العمل على برمجيات IoT وتربيط مستشعرات القراءات مع الواجهات البرمجية الخاصة بالـ Full-Stack.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Luxurious Contact Section -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div class="glass-panel p-8 sm:p-14 rounded-3xl border border-cyan-500/30 text-center relative overflow-hidden shadow-2xl">
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <h2 class="text-3xl sm:text-5xl font-black mb-4">تواصل معي مباشرة</h2>
+                <p class="text-gray-300 max-w-xl mx-auto mb-10 text-base">يسعدني تواصلك لبناء مشاريع مشتركة أو مناقشة أفكار تقنية جديدة.</p>
+                
+                <!-- Contact Buttons Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-3xl mx-auto mb-10">
+                    
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/201274367632" target="_blank" class="flex items-center space-x-4 space-x-reverse p-4 rounded-2xl glass-card border border-emerald-500/40 hover:border-emerald-400 text-emerald-300 transition-all hover:scale-105">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-bold text-sm text-white">محادثة واتساب</span>
+                            <span class="text-xs text-emerald-400">01274367632</span>
+                        </div>
+                    </a>
+
+                    <!-- LinkedIn -->
+                    <a href="https://www.linkedin.com/in/mohamoud-saadawie-87708a3b7?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="flex items-center space-x-4 space-x-reverse p-4 rounded-2xl glass-card border border-blue-500/40 hover:border-blue-400 text-blue-300 transition-all hover:scale-105">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 text-2xl">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-bold text-sm text-white">LinkedIn</span>
+                            <span class="text-xs text-blue-300">الملف الشخصي</span>
+                        </div>
+                    </a>
+
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/share/1EcSU9u3G5/" target="_blank" class="flex items-center space-x-4 space-x-reverse p-4 rounded-2xl glass-card border border-indigo-500/40 hover:border-indigo-400 text-indigo-300 transition-all hover:scale-105">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-2xl">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-bold text-sm text-white">Facebook</span>
+                            <span class="text-xs text-indigo-300">صفحة فيسبوك</span>
+                        </div>
+                    </a>
+
+                    <!-- Email -->
+                    <a href="mailto:Mohamoudsaadawie2@gmail.com" class="flex items-center space-x-4 space-x-reverse p-4 rounded-2xl glass-card border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 transition-all hover:scale-105">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-2xl">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-bold text-sm text-white">البريد الإلكتروني</span>
+                            <span class="text-xs text-cyan-300">إرسال إيميل مباشر</span>
+                        </div>
+                    </a>
+
+                    <!-- Phone Direct Call -->
+                    <a href="tel:01274367632" class="flex items-center space-x-4 space-x-reverse p-4 rounded-2xl glass-card border border-purple-500/40 hover:border-purple-400 text-purple-300 transition-all hover:scale-105 sm:col-span-2 lg:col-span-2">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 text-2xl">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block font-bold text-sm text-white">اتصال هاتفي مباشر</span>
+                            <span class="text-xs text-purple-300 font-tech">01274367632</span>
+                        </div>
+                    </a>
+
+                </div>
+
+                <div class="text-xs text-gray-400 pt-4 border-t border-white/10">
+                    جامعة برج العرب التكنولوجية | الإسكندرية، مصر
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-gray-500 text-sm border-t border-cyan-500/10 relative z-10">
+        <p>© 2026 Mahmoud Saadawie. All Rights Reserved. Building Ideas Into Technology.</p>
+    </footer>
+
+    <!-- Interactive Skill Modal -->
+    <div id="skill-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-panel p-8 rounded-3xl max-w-lg w-full border border-cyan-500/40 relative space-y-4">
+            <button onclick="closeSkillModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="modal-skill-title" class="text-2xl font-bold text-cyan-400"></h3>
+            <p id="modal-skill-desc" class="text-gray-300 leading-relaxed text-sm"></p>
+            <div class="pt-2 flex items-center justify-between">
+                <span id="modal-skill-level" class="px-3 py-1 bg-cyan-500/20 text-cyan-300 text-xs rounded-lg border border-cyan-500/30 font-semibold"></span>
+                <a id="modal-skill-link" href="#" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold text-sm shadow-lg shadow-cyan-500/30">
+                    التوثيق الرسمي <i class="fa-solid fa-external-link-alt mr-2 text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Project Modal -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-panel p-8 rounded-3xl max-w-2xl w-full border border-cyan-500/40 relative space-y-4 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeProjectModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="proj-modal-title" class="text-2xl font-bold text-cyan-400"></h3>
+            <div id="proj-modal-content" class="text-gray-300 space-y-4 text-sm leading-relaxed"></div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Skill Modal Functions
+        function openSkillModal(title, desc, level, link) {
+            document.getElementById('modal-skill-title').innerText = title;
+            document.getElementById('modal-skill-desc').innerText = desc;
+            document.getElementById('modal-skill-level').innerText = level;
+            document.getElementById('modal-skill-link').href = link;
+            document.getElementById('skill-modal').classList.remove('hidden');
+            document.getElementById('skill-modal').classList.add('flex');
+        }
+        function closeSkillModal() {
+            document.getElementById('skill-modal').classList.add('hidden');
+            document.getElementById('skill-modal').classList.remove('flex');
+        }
+
+        // Project Modal Details Data
+        const projectData = {
+            smartFarm: {
+                title: "النظام الزراعي الذكي (Smart Farm)",
+                content: `
+                    <p><strong>فكرة المشروع:</strong> نظام بيئي ذكي لمراقبة التربة والمناخ وتفعيل التنبيهات والتحكم الآلي بالري.</p>
+                    <p><strong>خطوات عمل النظام:</strong></p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-300">
+                        <li>قراءة مستشعرات الحرارة ورطوبة التربة والجو عبر لوحة ESP32.</li>
+                        <li>إرسال البيانات لاسلكياً لعرضها في لوحة تحكم الويب التفاعلية.</li>
+                        <li>دعم اتخاذ القرار وتنبيه الحريق أو ارتفاع الحرارة الزائد.</li>
+                    </ul>
+                    <p><strong>دوري الفعلي:</strong> تصميم وبناء واجهة الويب والـ Backend لاستقبال وإظهار البيانات الحية.</p>
+                `
+            },
+            drone: {
+                title: "مشروع الدرون (Drone Technology)",
+                content: `
+                    <p><strong>فكرة المشروع:</strong> استكشاف وتجميع أنظمة التحكم الإلكترونية بالطائرات المسيّرة وتطوير التوجيه اللاسلكي.</p>
+                    <p><strong>المجالات:</strong> Drone Tech, Electronics, Control Systems.</p>
+                `
+            },
+            batu: {
+                title: "BATU DIGITAL — المساعد الجامعي الذكي",
+                content: `
+                    <p><strong>فكرة المشروع:</strong> منصة ومساعد ذكي مخصص لطلاب جامعة برج العرب التكنولوجية لإتاحة المعلومات والخدمات الإرشادية.</p>
+                    <p><strong>التقنيات:</strong> Full-Stack Development, Databases, AI Integration.</p>
+                `
+            },
+            eeg: {
+                title: "دراسات واستكشاف إشارات الدماغ (EEG)",
+                content: `
+                    <p><strong>توضيح هام:</strong> المشروع عبارة عن نموذج استكشافي أولي قيد الدراسة والبحث.</p>
+                    <p>التعرف على الاحتياجات من إشارات EEG يتطلب جمع بيانات علمية وتدريب مكثف، والنموذج حالياً في مراحله الأولى.</p>
+                `
+            }
+        };
+
+        function openProjectModal(projectId) {
+            const data = projectData[projectId];
+            if(data) {
+                document.getElementById('proj-modal-title').innerText = data.title;
+                document.getElementById('proj-modal-content').innerHTML = data.content;
+                document.getElementById('project-modal').classList.remove('hidden');
+                document.getElementById('project-modal').classList.add('flex');
+            }
+        }
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.add('hidden');
+            document.getElementById('project-modal').classList.remove('flex');
+        }
+
+        window.onclick = function(event) {
+            const skillModal = document.getElementById('skill-modal');
+            const projModal = document.getElementById('project-modal');
+            if (event.target === skillModal) closeSkillModal();
+            if (event.target === projModal) closeProjectModal();
+        }
+
+        // Three.js High-End Particle Animation
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1800;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 60;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.09,
+            color: 0x00f2fe,
+            transparent: true,
+            opacity: 0.65,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 25;
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX / window.innerWidth - 0.5;
+            mouseY = event.clientY / window.innerHeight - 0.5;
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            particlesMesh.rotation.y = elapsedTime * 0.02 + mouseX * 0.2;
+            particlesMesh.rotation.x = elapsedTime * 0.015 + mouseY * 0.2;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
